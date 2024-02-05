@@ -66,18 +66,21 @@ def __genericSearch__(problem, stack_type):
         stack = util.Stack()
 
     visited = []
-    stack.push((problem.getStartState(), [], 1))
+    stack.push((problem.getStartState(), []))
+
     while not stack.isEmpty():
         node = stack.pop()
 
-        if problem.isGoalState(node[0]):
-            return node[1]
+        if node[0] not in visited:
 
-        visited.append(node[0])
+            if problem.isGoalState(node[0]):
+                return node[1]
 
-        for action in problem.getSuccessors(node[0]):
-            if action[0] not in visited:
-                stack.push((action[0], (node[1] + [action[1]])))
+            visited.append(node[0])
+
+            for action in problem.getSuccessors(node[0]):
+                if action[0] not in visited:
+                    stack.push((action[0], (node[1] + [action[1]])))
 
 
 def depthFirstSearch(problem):
@@ -111,17 +114,20 @@ def uniformCostSearch(problem):
 
     visited = []
     stack.push((problem.getStartState(), [], 0), 0)
+
     while not stack.isEmpty():
         node = stack.pop()
 
-        if problem.isGoalState(node[0]):
-            return node[1]
+        if node[0] not in visited:
 
-        visited.append(node[0])
+            if problem.isGoalState(node[0]):
+                return node[1]
 
-        for action in problem.getSuccessors(node[0]):
-            if action[0] not in visited:
-                stack.push((action[0], (node[1] + [action[1]]), node[2] + action[2]), node[2] + action[2])
+            visited.append(node[0])
+
+            for action in problem.getSuccessors(node[0]):
+                if action[0] not in visited:
+                    stack.push((action[0], (node[1] + [action[1]]), node[2] + action[2]), node[2] + action[2])
 
 
 def nullHeuristic(state, problem=None):
