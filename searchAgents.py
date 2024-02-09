@@ -320,10 +320,11 @@ class CornersProblem(search.SearchProblem):
             dx, dy = Actions.directionToVector(action)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
-                nextState = (nextx, nexty), (state[1] or state[0] == self.corners[0]), (state[2] or state[0] == self.corners[1]), (state[3] or state[0] == self.corners[2]), (state[4] or state[0] == self.corners[3])
+                nextState = (nextx, nexty), (state[1] or (nextx, nexty) == self.corners[0]), (state[2] or (nextx, nexty) == self.corners[1]), (state[3] or (nextx, nexty) == self.corners[2]), (state[4] or (nextx, nexty) == self.corners[3])
+                #nextState = (nextx, nexty), (state[1] or state[0] == self.corners[0]), (state[2] or state[0] == self.corners[1]), (state[3] or state[0] == self.corners[2]), (state[4] or state[0] == self.corners[3])
                 successors.append((nextState, action, 1))
 
-        self._expanded += 1 # DO NOT CHANGE
+        self._expanded += 1  # DO NOT CHANGE
         return successors
 
     def getCostOfActions(self, actions):
@@ -340,7 +341,7 @@ class CornersProblem(search.SearchProblem):
         return len(actions)
 
 
-def cornersHeuristic(state, problem):
+def cornersHeuristic2(state, problem):
     """
     A heuristic for the CornersProblem that you defined.
 
@@ -353,11 +354,48 @@ def cornersHeuristic(state, problem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
-    corners = problem.corners # These are the corner coordinates
-    walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
+    corners = problem.corners   # These are the corner coordinates
+    walls = problem.walls   # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    minimum = 99999999999999
+    aux = False
+    for i in range(len(corners)):
+        if not state[i+1]:
+            aux = True
+            minimum = min(abs(state[0][0] - corners[i][0]) + abs(state[0][1] - corners[i][1]), minimum)
+        #if state[i+1] == 0 and sum((p1 - p2) ** 2 for p1, p2 in zip(state[0], corners[i])) ** 0.5 < minimum:
+        #    aux = True
+        #    minimum = sum((p1 - p2) ** 2 for p1, p2 in zip(state[0], corners[i])) ** 0.5
+    if not aux:
+        return 0
+
+    return minimum
+
+
+def cornersHeuristic(state, problem):
+    corners = problem.corners   # Esquinas disponibles
+    pacman_position = state[0]  # Posición actual de Pac-Man
+
+    # Calcula la distancia Manhattan a todas las esquinas no visitadas
+    distances = []
+    amount = 0
+    for corner in corners:
+        if not state[corners.index(corner) + 1]:
+            amount += 1
+            dx = abs(corner[0] - pacman_position[0])
+            dy = abs(corner[1] - pacman_position[1])
+            distance = dx + dy
+            distances.append(distance)
+
+    # Utiliza la máxima distancia como estimación heurística
+    if distances:
+        return max(distances)
+    else:
+        return 0
+
+
+
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
