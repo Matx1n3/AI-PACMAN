@@ -7,6 +7,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -56,7 +57,7 @@ def tinyMazeSearch(problem):
     sequence of moves will be incorrect, so only use this for tinyMaze.
     """
     from game import Directions
-    return  ['South', 'South', 'West', 'South', 'West', 'West', 'South', 'West']
+    return ['South', 'South', 'West', 'South', 'West', 'West', 'South', 'West']
 
 
 def __genericSearch__(problem, stack_type):
@@ -137,6 +138,7 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
@@ -157,7 +159,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
             for action in problem.getSuccessors(node[0]):
                 if action[0] not in visited:
-                    stack.push((action[0], (node[1] + [action[1]]), node[2] + action[2]), node[2] + action[2] + heuristic(action[0], problem))
+                    stack.push((action[0], (node[1] + [action[1]]), node[2] + action[2]),
+                               node[2] + action[2] + heuristic(action[0], problem))
 
 
 # Abbreviations
