@@ -612,7 +612,7 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        return search.ucs(problem)
+        return search.bfs(problem)
 
 
 
