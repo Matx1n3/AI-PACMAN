@@ -506,80 +506,24 @@ def foodHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     if len(foodGrid.asList()) == 0:
         return 0
+    elif len(foodGrid.asList()) == 1:
+        return util.manhattanDistance(position, foodGrid.asList()[0])
 
-    # Initialize the maximum Manhattan distance to Pacman's position
-    max_dist = 0
-
-    # Define a function to calculate the Manhattan distance between two points
-    def manhattan_distance(p1, p2):
-        return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])
-
-    # Define a function to check if a position is valid (not a wall)
-    def is_valid_position(pos):
-        return not walls[pos[0]][pos[1]]
-
-    # Calculate the maximum Manhattan distance from Pacman's position to any food position,
-    # taking into account the walls
-    for food in foodGrid.asList():
-        frontier = util.PriorityQueue()
-        visited = set()
-        frontier.push((position, 0), 0)
-        while not frontier.isEmpty():
-            current, cost = frontier.pop()
-            if current == food:
-                max_dist = max(max_dist, cost)
-                break
-            if current in visited:
-                continue
-            visited.add(current)
-            for successor in [(current[0] + 1, current[1]), (current[0] - 1, current[1]),
-                              (current[0], current[1] + 1), (current[0], current[1] - 1)]:
-                if is_valid_position(successor) and successor not in visited:
-                    priority = cost + manhattan_distance(successor, food)
-                    frontier.push((successor, cost + 1), priority)
-
-    return max_dist
-
-
-def foodHeuristic2(state, problem):
-    """
-    Your heuristic for the FoodSearchProblem goes here.
-
-    This heuristic must be consistent to ensure correctness.  First, try to come
-    up with an admissible heuristic; almost all admissible heuristics will be
-    consistent as well.
-
-    If using A* ever finds a solution that is worse uniform cost search finds,
-    your heuristic is *not* consistent, and probably not admissible!  On the
-    other hand, inadmissible or inconsistent heuristics may find optimal
-    solutions, so be careful.
-
-    The state is a tuple ( pacmanPosition, foodGrid ) where foodGrid is a Grid
-    (see game.py) of either True or False. You can call foodGrid.asList() to get
-    a list of food coordinates instead.
-
-    If you want access to info like walls, capsules, etc., you can query the
-    problem.  For example, problem.walls gives you a Grid of where the walls
-    are.
-
-    If you want to *store* information to be reused in other calls to the
-    heuristic, there is a dictionary called problem.heuristicInfo that you can
-    use. For example, if you only want to count the walls once and store that
-    value, try: problem.heuristicInfo['wallCount'] = problem.walls.count()
-    Subsequent calls to this heuristic can access
-    problem.heuristicInfo['wallCount']
-    """
-
-    position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    if len(foodGrid.asList()) == 0:
-        return 0
-    max_dist = 0
+    min_food = 0
+    min_distance = 99999999
 
     for food in foodGrid.asList():
-        max_dist = max(max_dist, abs(food[0] - position[0]) + abs(food[1] - position[1]))
+        if util.manhattanDistance(position, food) < min_distance:
+            min_food = food
+            min_distance = util.manhattanDistance(position, food)
 
-    return max_dist * len(foodGrid.asList())
+    max_distance_from_min_food = 0
+
+    for food in foodGrid.asList():
+        if util.manhattanDistance(min_food, food) > max_distance_from_min_food:
+            max_distance_from_min_food = util.manhattanDistance(min_food, food)
+
+    return min_distance + max_distance_from_min_food
 
 
 class ClosestDotSearchAgent(SearchAgent):
