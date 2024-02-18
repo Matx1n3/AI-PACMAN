@@ -389,10 +389,8 @@ def cornersHeuristic(state, problem):
 
     # Calcula la distancia Manhattan a todas las esquinas no visitadas
     distances = []
-    amount = 0
     for corner in corners:
-        if not state[corners.index(corner) + 1]:
-            amount += 1
+        if not state[corners.index(corner) + 1]:    # Si no se ha visitado
             dx = abs(corner[0] - pacman_position[0])
             dy = abs(corner[1] - pacman_position[1])
             distance = dx + dy
