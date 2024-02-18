@@ -589,7 +589,7 @@ class Game:
                 self.unmute()
 
         agentIndex = self.startingIndex
-        numAgents = len( self.agents )
+        numAgents = len(self.agents)
 
         while not self.gameOver:
             # Fetch the next agent

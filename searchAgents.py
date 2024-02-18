@@ -351,38 +351,6 @@ class CornersProblem(search.SearchProblem):
         return len(actions)
 
 
-def cornersHeuristic2(state, problem):
-    """
-    A heuristic for the CornersProblem that you defined.
-
-      state:   The current search state
-               (a data structure you chose in your search problem)
-
-      problem: The CornersProblem instance for this layout.
-
-    This function should always return a number that is a lower bound on the
-    shortest path from the state to a goal of the problem; i.e.  it should be
-    admissible (as well as consistent).
-    """
-    corners = problem.corners  # These are the corner coordinates
-    walls = problem.walls  # These are the walls of the maze, as a Grid (game.py)
-
-    "*** YOUR CODE HERE ***"
-    minimum = 99999999999999
-    aux = False
-    for i in range(len(corners)):
-        if not state[i + 1]:
-            aux = True
-            minimum = min(abs(state[0][0] - corners[i][0]) + abs(state[0][1] - corners[i][1]), minimum)
-        # if state[i+1] == 0 and sum((p1 - p2) ** 2 for p1, p2 in zip(state[0], corners[i])) ** 0.5 < minimum:
-        #    aux = True
-        #    minimum = sum((p1 - p2) ** 2 for p1, p2 in zip(state[0], corners[i])) ** 0.5
-    if not aux:
-        return 0
-
-    return minimum
-
-
 def cornersHeuristic(state, problem):
     corners = problem.corners  # Esquinas disponibles
     pacman_position = state[0]  # Posición actual de Pac-Man
